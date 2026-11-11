@@ -1,0 +1,17 @@
+digraph M { rankdir=TB; nodesep=0.25; ranksep=0.45; newrank=true; node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 fillcolor="#f3eefb" color="#6b4fa0"]; edge [fontname="Helvetica" fontsize=10 color="#555555"];
+  subgraph cluster_r { label="Real-world question"; fontname="Helvetica-Bold"; color="#bbbbbb";
+    r1 [label="Original code / regex"]; r2 [label="Refactored code / regex"]; r3 [label="'Did the behaviour change?'"]; }
+  subgraph cluster_f { label="Computational formulation"; fontname="Helvetica-Bold"; color="#bbbbbb";
+    f1 [label="Machine M1"]; f2 [label="Machine M2"]; f3 [label="EQ = { <M1, M2> : L(M1) = L(M2) }"]; }
+  subgraph cluster_a { label="What theory says"; fontname="Helvetica-Bold"; color="#bbbbbb";
+    a1 [label="M1, M2 are DFAs / regexes:\nDECIDABLE" fillcolor="#e6f4ea" color="#3a7d44"];
+    a2 [label="M1, M2 are CFGs:\nundecidable" fillcolor="#fff4d6" color="#b08900"];
+    a3 [label="M1, M2 are Turing machines:\nnot even recognisable" fillcolor="#fbe9e7" color="#b3412f"]; }
+  subgraph cluster_e { label="Engineering answer"; fontname="Helvetica-Bold"; color="#bbbbbb";
+    e1 [label="Exact check\n(product of DFAs)"]; e2 [label="Restrict the domain\n(finite: test every input)"];
+    e3 [label="Search for a witness\n(differential testing)"]; }
+  v [label="EQUIVALENT / NOT EQUIVALENT (with witness) / UNKNOWN" fillcolor="#fff4d6" color="#b08900" width=5];
+  { rank=same; r1; r2; r3; } { rank=same; f1; f2; f3; } { rank=same; a1; a2; a3; } { rank=same; e1; e2; e3; }
+  r1 -> r2 -> r3 [style=invis]; f1 -> f2 -> f3 [style=invis]; a1 -> a2 -> a3 [style=invis]; e1 -> e2 -> e3 [style=invis];
+  r1 -> f1; r2 -> f2; r3 -> f3; f3 -> a1; f3 -> a2; f3 -> a3; a1 -> e1; a3 -> e2; a3 -> e3; a2 -> e3 [style=dashed label=" search"]; e1 -> v; e2 -> v; e3 -> v;
+}

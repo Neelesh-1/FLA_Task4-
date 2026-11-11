@@ -1,0 +1,14 @@
+digraph P { rankdir=TB; node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 fillcolor="#f3eefb" color="#6b4fa0"]; edge [fontname="Helvetica" fontsize=10 color="#555555"];
+  in [label="Two regexes   or   two functions + input domain" shape=note fillcolor="#ffffff"];
+  q [label="Regex?" shape=diamond fillcolor="#ffffff"];
+  rx [label="Thompson NFA for each regex\nwalk the product of the two subset\nconstructions breadth-first"];
+  dm [label="Finite domain?" shape=diamond fillcolor="#ffffff"];
+  ex [label="Run both on EVERY input\n(line budget per run)"];
+  dt [label="Differential testing\nboundary values + random inputs"];
+  E [label="EQUIVALENT\n(exact / exact on domain)" fillcolor="#e6f4ea" color="#3a7d44"];
+  N [label="NOT EQUIVALENT\n+ witness input" fillcolor="#fbe9e7" color="#b3412f"];
+  U [label="UNKNOWN" fillcolor="#fff4d6" color="#b08900"];
+  in -> q; q -> rx [label="yes"]; q -> dm [label="no"]; rx -> E; rx -> N [label="mismatch\n(shortest)"];
+  dm -> ex [label="yes"]; dm -> dt [label="no"]; ex -> E [label="all agree"]; ex -> N [label="differ"]; ex -> U [label="timeouts"];
+  dt -> N [label="differ"]; dt -> U [label="no difference"];
+}

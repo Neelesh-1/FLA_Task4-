@@ -1,0 +1,6 @@
+digraph L { rankdir=LR; nodesep=0.3; node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 fillcolor="#f3eefb" color="#6b4fa0"]; edge [fontname="Helvetica" fontsize=10 color="#555555"];
+  d [label="EQ_DFA\ndecidable\n(DFA product + reachability)" fillcolor="#e6f4ea" color="#3a7d44"];
+  c [label="EQ_CFG\nundecidable, but co-recognisable\n(a difference can be found by search)" fillcolor="#fff4d6" color="#b08900"];
+  t [label="EQ_TM\nneither recognisable\nnor co-recognisable" fillcolor="#fbe9e7" color="#b3412f"];
+  d -> c [label="more memory"]; c -> t [label="more memory"];
+}

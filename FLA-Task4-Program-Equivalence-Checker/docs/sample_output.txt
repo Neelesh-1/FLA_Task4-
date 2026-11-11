@@ -1,0 +1,54 @@
+
+1. Equivalence is undecidable: reduction from the halting problem
+-----------------------------------------------------------------
+   For a program P build  Q_P(x) = { run P; return 0 }  and  Z(x) = 0.
+   Q_P and Z are equivalent  <=>  P halts.  So an exact equivalence checker
+   would decide HALT. Three real checkers, three programs P:
+
+   checker_syntax: compares the source code of the two functions
+      P = p_halts_now          says NOT EQUIVALENT  truth EQUIVALENT      WRONG
+      P = p_halts_after_5000   says NOT EQUIVALENT  truth EQUIVALENT      WRONG
+      P = p_loops_forever      says NOT EQUIVALENT  truth NOT EQUIVALENT  right
+   checker_testing: runs both on 5 inputs with a 2000-line budget; timeout counts as a difference
+      P = p_halts_now          says EQUIVALENT      truth EQUIVALENT      right
+      P = p_halts_after_5000   says NOT EQUIVALENT  truth EQUIVALENT      WRONG
+      P = p_loops_forever      says NOT EQUIVALENT  truth NOT EQUIVALENT  right
+   checker_lenient: same, but inputs that pass the 2000-line budget are skipped
+      P = p_halts_now          says EQUIVALENT      truth EQUIVALENT      right
+      P = p_halts_after_5000   says EQUIVALENT      truth EQUIVALENT      right
+      P = p_loops_forever      says EQUIVALENT      truth NOT EQUIVALENT  WRONG
+
+   Every checker is wrong on some P. Any checker you design will be too.
+
+2. Regular expressions: equivalence is decidable (product of DFAs)
+------------------------------------------------------------------
+   pair              regex 1                       regex 2                     verdict         shortest witness
+   star_of_union     (a|b)*                        (a*b*)*                     EQUIVALENT      
+   shifted_loop      a(ba)*                        (ab)*a                      EQUIVALENT      
+   optional_prefix   x?y                           y|xy                        EQUIVALENT      
+   double_star       a**                           a*                          EQUIVALENT      
+   phone_digits      [0-9]+(-[0-9]+)*              [0-9]([0-9]|-[0-9])*        EQUIVALENT      
+   username_rule     [a-z][a-z0-9_]*               [a-z]([a-z]|[0-9]|_)*       EQUIVALENT      
+   pairs_vs_blocks   (ab)*                         a*b*                        NOT EQUIVALENT  'a' (only 2nd)
+   second_last_one   (0|1)*1(0|1)                  (0|1)*1                     NOT EQUIVALENT  '1' (only 2nd)
+   pin_refactor_bug  [0-9][0-9][0-9][0-9]          [0-9][0-9][0-9][0-9]?       NOT EQUIVALENT  '000' (only 2nd)
+   email_tld_bug     [a-z]+@[a-z]+\.[a-z][a-z]+    [a-z]+@[a-z]+\.[a-z]+       NOT EQUIVALENT  'a@a.a' (only 2nd)
+
+   10/10 answers match the hand-checked truth. Every answer is exact.
+
+3. Programs: restricted cases (finite domain, or a concrete witness)
+--------------------------------------------------------------------
+   pair                  truth     domain / method                               verdict         witness / note
+   sum_loop_vs_formula   equiv     exhaustive over all 301 inputs                EQUIVALENT      
+   abs_two_ways          equiv     exhaustive over all 1001 inputs               EQUIVALENT      
+   swap_xor_trick        equiv     exhaustive over all 4096 inputs               EQUIVALENT      
+   fast_power            equiv     exhaustive over all 156 inputs                EQUIVALENT      
+   max3_refactor         differ    exhaustive over all 343 inputs                NOT EQUIVALENT  (-2, -2, -3)
+   leap_year_bug         differ    exhaustive over all 201 inputs                NOT EQUIVALENT  (2000,)
+   off_by_one            differ    exhaustive over all 50 inputs                 NOT EQUIVALENT  (1,)
+   collatz_small         equiv     exhaustive over all 1999 inputs               EQUIVALENT      
+   collatz_unbounded     open      differential test on 3004 inputs (boundary +  UNKNOWN         
+   slow_vs_fast          equiv     exhaustive over all 5 inputs                  UNKNOWN         5 timeouts
+
+   8 decided correctly, 2 UNKNOWN, 0 wrong.
+   EQUIVALENT is only claimed for the finite domain that was checked.
